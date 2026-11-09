@@ -1,239 +1,187 @@
-<!DOCTYPE HTML>
-<!--
-	Arcana by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Arcana by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="is-preload">
-		<div id="page-wrapper">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub Actions y procesos de Linux</title>
+<style>
+:root{
+  --bg:#0b1020;--bg2:#111833;--card:#151d3b;--text:#e8ebf5;--muted:#9aa5c4;
+  --gold:#d8b46a;--accent:#7c9cff;--line:#243056;--code:#080c1a;--ok:#5ee6a0;--bad:#ff7b7b;
+}
+@media (prefers-color-scheme: light){
+  :root{--bg:#f6f4ee;--bg2:#ebe7db;--card:#ffffff;--text:#1b2140;--muted:#5d6584;
+  --gold:#9a7425;--accent:#3a55c8;--line:#ddd7c6;--code:#161c38;--ok:#1d8a55;--bad:#c23b3b}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;line-height:1.2}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav ul{list-style:none;margin:0 auto;padding:12px 20px;max-width:960px;display:flex;gap:22px;overflow-x:auto;white-space:nowrap}
+nav a{text-decoration:none;color:var(--muted);font-size:.9rem;letter-spacing:.04em;text-transform:uppercase}
+nav a:hover{color:var(--gold)}
+.hero{text-align:center;padding:90px 20px 80px;background:radial-gradient(ellipse at top,var(--bg2),var(--bg) 70%)}
+.hero .tag{color:var(--gold);letter-spacing:.25em;text-transform:uppercase;font-size:.78rem}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);margin:14px auto;max-width:820px}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero p{color:var(--muted);max-width:620px;margin:0 auto 28px;font-size:1.1rem}
+.btn{display:inline-block;padding:11px 26px;border:1px solid var(--gold);color:var(--gold);
+  text-decoration:none;border-radius:999px;font-size:.9rem;letter-spacing:.06em;transition:.2s}
+.btn:hover{background:var(--gold);color:var(--bg)}
+main{max-width:960px;margin:0 auto;padding:0 20px 60px}
+section{padding:56px 0 8px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.eyebrow{color:var(--gold);font-size:.78rem;letter-spacing:.22em;text-transform:uppercase}
+h2{font-size:clamp(1.6rem,3.5vw,2.2rem);margin:6px 0 18px}
+h3{font-size:1.15rem;margin:0 0 6px}
+p{margin:0 0 16px;color:var(--text)}
+.lead{color:var(--muted);font-size:1.08rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:22px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card .n{color:var(--gold);font-family:Georgia,serif;font-size:1.6rem}
+.card p{color:var(--muted);margin:0;font-size:.95rem}
+code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:.9em;color:var(--accent)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:20px 0}
+pre code{color:#d6def5;line-height:1.7;font-size:.88rem}
+.c{color:#7f8bb0}
+table{width:100%;border-collapse:collapse;margin:18px 0;background:var(--card);border-radius:12px;overflow:hidden}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--gold);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;background:var(--bg2)}
+tr:last-child td{border-bottom:none}
+.flow{list-style:none;padding:0;margin:24px 0;counter-reset:s}
+.flow li{counter-increment:s;position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:14px 18px 14px 62px;margin-bottom:22px}
+.flow li::before{content:counter(s);position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-weight:700}
+.flow li:not(:last-child)::after{content:"↓";position:absolute;left:25px;bottom:-24px;color:var(--gold)}
+.quote{border-left:3px solid var(--gold);padding:6px 0 6px 20px;margin:26px 0;
+  font-family:Georgia,serif;font-size:1.25rem;font-style:italic}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}
+footer{text-align:center;color:var(--muted);padding:34px 20px;border-top:1px solid var(--line);font-size:.85rem}
+</style>
+</head>
+<body>
 
-			<!-- Header -->
-				<div id="header">
+<nav><ul>
+  <li><a href="#intro">Introducción</a></li>
+  <li><a href="#actions">GitHub Actions</a></li>
+  <li><a href="#runner">Runner</a></li>
+  <li><a href="#procesos">Procesos</a></li>
+  <li><a href="#relacion">Relación</a></li>
+  <li><a href="#resumen">Resumen</a></li>
+</ul></nav>
 
-					<!-- Logo -->
-						<h1><a href="index.html" id="logo">Arcana <em>by HTML5 UP</em></a></h1>
+<header class="hero">
+  <div class="tag">Automatización · CI/CD · Linux</div>
+  <h1>GitHub Actions <em>y procesos</em> de Linux</h1>
+  <p>Cómo GitHub Actions automatiza las tareas de un proyecto y cómo Linux las ejecuta mediante comandos y procesos.</p>
+  <a class="btn" href="#intro">Comenzar</a>
+</header>
 
-					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-								<li class="current"><a href="index.html">Home</a></li>
-								<li>
-									<a href="#">Dropdown</a>
-									<ul>
-										<li><a href="#">Lorem dolor</a></li>
-										<li><a href="#">Magna phasellus</a></li>
-										<li><a href="#">Etiam sed tempus</a></li>
-										<li>
-											<a href="#">Submenu</a>
-											<ul>
-												<li><a href="#">Lorem dolor</a></li>
-												<li><a href="#">Phasellus magna</a></li>
-												<li><a href="#">Magna phasellus</a></li>
-												<li><a href="#">Etiam nisl</a></li>
-												<li><a href="#">Veroeros feugiat</a></li>
-											</ul>
-										</li>
-										<li><a href="#">Veroeros feugiat</a></li>
-									</ul>
-								</li>
-								<li><a href="left-sidebar.html">Left Sidebar</a></li>
-								<li><a href="right-sidebar.html">Right Sidebar</a></li>
-								<li><a href="two-sidebar.html">Two Sidebar</a></li>
-								<li><a href="no-sidebar.html">No Sidebar</a></li>
-							</ul>
-						</nav>
+<main>
 
-				</div>
+<section id="intro">
+  <div class="eyebrow">01 · Introducción</div>
+  <h2>¿Por qué existe la automatización?</h2>
+  <p class="lead">Cuando programamos, cambiamos el código todo el tiempo, y cada cambio puede romper algo que antes funcionaba. Comprobarlo a mano cada vez es lento y propenso a errores.</p>
+  <div class="grid">
+    <div class="card"><h3>Integración continua (CI)</h3><p>Integra los cambios al código y comprueba automáticamente que no haya errores.</p></div>
+    <div class="card"><h3>Despliegue continuo (CD)</h3><p>Prepara o publica automáticamente una versión del programa.</p></div>
+  </div>
+  <p>Ambas buscan automatizar tareas que normalmente haríamos de forma manual.</p>
+</section>
 
-			<!-- Banner -->
-				<section id="banner">
-					<header>
-						<h2>Arcana: <em>A responsive site template freebie by <a href="http://html5up.net">HTML5 UP</a></em></h2>
-						<a href="#" class="button">Learn More</a>
-					</header>
-				</section>
+<section id="actions">
+  <div class="eyebrow">02 · GitHub Actions</div>
+  <h2>¿Qué es GitHub Actions?</h2>
+  <p>Es una herramienta de GitHub que automatiza tareas dentro de un proyecto. Por ejemplo, cada vez que un desarrollador sube cambios con <code>git push</code>, se ejecutan pruebas automáticamente. Esa automatización se llama <strong>workflow</strong> y tiene cuatro elementos:</p>
+  <div class="grid">
+    <div class="card"><div class="n">I</div><h3>Event</h3><p>Lo que dispara el workflow, por ejemplo un push.</p></div>
+    <div class="card"><div class="n">II</div><h3>Runner</h3><p>La máquina que ejecuta las tareas.</p></div>
+    <div class="card"><div class="n">III</div><h3>Job</h3><p>Conjunto de steps que corren en un mismo runner.</p></div>
+    <div class="card"><div class="n">IV</div><h3>Steps</h3><p>Los pasos individuales dentro de un job.</p></div>
+  </div>
+  <p>Los steps de un mismo job se ejecutan en orden. Los jobs pueden correr en paralelo o depender unos de otros.</p>
+  <pre><code><span class="c"># .github/workflows/test.yml</span>
+on: push                      <span class="c"># event</span>
+jobs:
+  test:                       <span class="c"># job</span>
+    runs-on: ubuntu-latest    <span class="c"># runner (Linux)</span>
+    steps:                    <span class="c"># steps</span>
+      - uses: actions/checkout@v4
+      - run: npm install
+      - run: npm test</code></pre>
+</section>
 
-			<!-- Highlights -->
-				<section class="wrapper style1">
-					<div class="container">
-						<div class="row gtr-200">
-							<section class="col-4 col-12-narrower">
-								<div class="box highlight">
-									<i class="icon solid major fa-paper-plane"></i>
-									<h3>This Is Important</h3>
-									<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-								</div>
-							</section>
-							<section class="col-4 col-12-narrower">
-								<div class="box highlight">
-									<i class="icon solid major fa-pencil-alt"></i>
-									<h3>Also Important</h3>
-									<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-								</div>
-							</section>
-							<section class="col-4 col-12-narrower">
-								<div class="box highlight">
-									<i class="icon solid major fa-wrench"></i>
-									<h3>Probably Important</h3>
-									<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-								</div>
-							</section>
-						</div>
-					</div>
-				</section>
+<section id="runner">
+  <div class="eyebrow">03 · Runner</div>
+  <h2>El runner de Linux</h2>
+  <p>El runner es el entorno o máquina donde GitHub Actions ejecuta las tareas del workflow. Puede usar Linux, Windows o macOS, y puede ser una máquina que provee GitHub (como <code>ubuntu-latest</code>) o una propia.</p>
+  <p>Linux es muy usado porque permite ejecutar comandos, scripts y herramientas para instalar dependencias, ejecutar pruebas, compilar el programa y generar archivos.</p>
+  <div class="quote">GitHub Actions organiza y solicita las tareas; el runner las ejecuta.</div>
+</section>
 
-			<!-- Gigantic Heading -->
-				<section class="wrapper style2">
-					<div class="container">
-						<header class="major">
-							<h2>A gigantic heading you can use for whatever</h2>
-							<p>With a much smaller subtitle hanging out just below it</p>
-						</header>
-					</div>
-				</section>
+<section id="procesos">
+  <div class="eyebrow">04 · Procesos</div>
+  <h2>Procesos en Linux</h2>
+  <p>Cuando Linux ejecuta un programa o comando, crea un <strong>proceso</strong>: un programa en ejecución. Cada proceso tiene un identificador único llamado <strong>PID</strong>, que permite reconocerlo y administrarlo. Cada <code>run:</code> de un workflow, como <code>npm test</code>, se convierte en un proceso dentro del runner.</p>
+  <div class="tw"><table>
+    <tr><th>Comando</th><th>Función</th></tr>
+    <tr><td><code>ps</code></td><td>Muestra información de los procesos.</td></tr>
+    <tr><td><code>htop</code></td><td>Permite observar y administrar procesos de forma interactiva.</td></tr>
+    <tr><td><code>kill</code></td><td>Envía señales a un proceso para solicitar su finalización u otra acción.</td></tr>
+  </table></div>
+  <p>Si un programa queda trabado, podemos identificar su PID y enviarle una señal para finalizarlo.</p>
+  <h3>Estados de un proceso</h3>
+  <div class="tw"><table>
+    <tr><th>Estado</th><th>Significado</th></tr>
+    <tr><td><strong>Running</strong></td><td>Está ejecutándose o listo para ejecutarse.</td></tr>
+    <tr><td><strong>Sleeping</strong></td><td>Está esperando algún evento o recurso.</td></tr>
+    <tr><td><strong>Stopped</strong></td><td>Está detenido.</td></tr>
+    <tr><td><strong>Zombie</strong></td><td>Terminó, pero su proceso padre todavía no recogió su estado de finalización.</td></tr>
+  </table></div>
+</section>
 
-			<!-- Posts -->
-				<section class="wrapper style1">
-					<div class="container">
-						<div class="row">
-							<section class="col-6 col-12-narrower">
-								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic01.jpg" alt="" /></a>
-									<div class="inner">
-										<h3>The First Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-									</div>
-								</div>
-							</section>
-							<section class="col-6 col-12-narrower">
-								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic02.jpg" alt="" /></a>
-									<div class="inner">
-										<h3>The Second Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-									</div>
-								</div>
-							</section>
-						</div>
-						<div class="row">
-							<section class="col-6 col-12-narrower">
-								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic03.jpg" alt="" /></a>
-									<div class="inner">
-										<h3>The Third Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-									</div>
-								</div>
-							</section>
-							<section class="col-6 col-12-narrower">
-								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic04.jpg" alt="" /></a>
-									<div class="inner">
-										<h3>The Fourth Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
-									</div>
-								</div>
-							</section>
-						</div>
-					</div>
-				</section>
+<section id="relacion">
+  <div class="eyebrow">05 · Relación</div>
+  <h2>¿Cómo se relaciona todo?</h2>
+  <ol class="flow">
+    <li><strong>Desarrollador</strong><br><span class="lead">Sube cambios al repositorio de GitHub.</span></li>
+    <li><strong>GitHub Actions</strong><br><span class="lead">Detecta el evento y activa el workflow.</span></li>
+    <li><strong>Runner de Linux</strong><br><span class="lead">Recibe y ejecuta los jobs y steps.</span></li>
+    <li><strong>Procesos de Linux</strong><br><span class="lead">Ejecutan comandos, pruebas y programas.</span></li>
+    <li><strong>Resultado</strong><br><span class="lead">La automatización termina y se informa si tuvo éxito o falló.</span></li>
+  </ol>
+  <p>Al terminar, cada proceso devuelve un <strong>código de salida</strong>: si es <span class="ok">0</span>, el step salió bien; si es <span class="bad">distinto de 0</span>, el step falla y el workflow se marca como fallido.</p>
+</section>
 
-			<!-- CTA -->
-				<section id="cta" class="wrapper style3">
-					<div class="container">
-						<header>
-							<h2>Are you ready to continue your quest?</h2>
-							<a href="#" class="button">Insert Coin</a>
-						</header>
-					</div>
-				</section>
+<section id="resumen">
+  <div class="eyebrow">06 · Resumen</div>
+  <h2>Para recordar</h2>
+  <div class="quote">GitHub Actions define cuándo y qué ejecutar; el runner proporciona el entorno; Linux administra los procesos necesarios para realizar esas tareas.</div>
+  <div class="tw"><table>
+    <tr><th>Concepto</th><th>Acordate de…</th></tr>
+    <tr><td>CI/CD</td><td>Automatizar integración, pruebas y despliegues.</td></tr>
+    <tr><td>GitHub Actions</td><td>Herramienta de automatización.</td></tr>
+    <tr><td>Workflow</td><td>Archivo que define la automatización.</td></tr>
+    <tr><td>Event</td><td>Lo que dispara el workflow.</td></tr>
+    <tr><td>Runner</td><td>Máquina que ejecuta las tareas.</td></tr>
+    <tr><td>Job</td><td>Conjunto de steps en un mismo runner.</td></tr>
+    <tr><td>Steps</td><td>Pasos de un job.</td></tr>
+    <tr><td>Proceso · PID</td><td>Programa en ejecución · su identificador.</td></tr>
+    <tr><td><code>ps</code> · <code>htop</code> · <code>kill</code></td><td>Consultar, administrar y enviar señales a procesos.</td></tr>
+    <tr><td>Código de salida</td><td>0 = éxito; distinto de 0 = falla.</td></tr>
+  </table></div>
+</section>
 
-			<!-- Footer -->
-				<div id="footer">
-					<div class="container">
-						<div class="row">
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Mattis et quis rutrum</a></li>
-									<li><a href="#">Suspendisse amet varius</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan dolor</a></li>
-									<li><a href="#">Mattis rutrum accumsan</a></li>
-									<li><a href="#">Suspendisse varius nibh</a></li>
-									<li><a href="#">Sed et dapibus mattis</a></li>
-								</ul>
-							</section>
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>More Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Duis neque nisi dapibus</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan sed</a></li>
-									<li><a href="#">Mattis et sed accumsan</a></li>
-									<li><a href="#">Duis neque nisi sed</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum amet varius</a></li>
-								</ul>
-							</section>
-							<section class="col-6 col-12-narrower">
-								<h3>Get In Touch</h3>
-								<form>
-									<div class="row gtr-50">
-										<div class="col-6 col-12-mobilep">
-											<input type="text" name="name" id="name" placeholder="Name" />
-										</div>
-										<div class="col-6 col-12-mobilep">
-											<input type="email" name="email" id="email" placeholder="Email" />
-										</div>
-										<div class="col-12">
-											<textarea name="message" id="message" placeholder="Message" rows="5"></textarea>
-										</div>
-										<div class="col-12">
-											<ul class="actions">
-												<li><input type="submit" class="button alt" value="Send Message" /></li>
-											</ul>
-										</div>
-									</div>
-								</form>
-							</section>
-						</div>
-					</div>
+</main>
 
-					<!-- Icons -->
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-							<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-							<li><a href="#" class="icon brands fa-google-plus-g"><span class="label">Google+</span></a></li>
-						</ul>
-
-					<!-- Copyright -->
-						<div class="copyright">
-							<ul class="menu">
-								<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-							</ul>
-						</div>
-
-				</div>
-
-		</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
-	</body>
+<footer>GitHub Actions y procesos de Linux</footer>
+</body>
 </html>
